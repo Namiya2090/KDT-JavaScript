@@ -1,25 +1,28 @@
 class Product {
   constructor(title, price) {
-    // 작성할 곳: 각 객체의 제목과 가격을 저장합니다.
     this.title = title;
     this.price = price;
   }
-
   getTotal(quantity) {
-    // 작성할 곳: 이 상품의 가격과 수량을 곱해 반환합니다.
     return this.price * quantity;
   }
+  static isValidPrice(price) {
+    return price >= 0;
+  }
 }
-
-const notebook = new Product("노트", 3000);
-const pen = new Product("펜", 1000);
-
-console.log(notebook.title, notebook.price);
-console.log(pen.title, pen.price);
-notebook.price = 3500;
-console.log(notebook.price, pen.price);
-console.log(notebook.getTotal(2), pen.getTotal(2));
-
-console.log(Object.hasOwn(notebook, "title"));
-console.log(Object.hasOwn(notebook, "getTotal"));
-console.log(notebook.getTotal === pen.getTotal);
+class SaleProduct extends Product {
+  constructor(title, price, rate) {
+    super(title, price);
+    this.rate = rate;
+  }
+  getTotal(quantity) {
+    return super.getTotal(quantity) * (1 - this.rate);
+  }
+}
+const normal = new Product("노트", 3000);
+const sale = new SaleProduct("노트", 3000, 0.1);
+console.log(normal.getTotal(2));
+console.log(sale.getTotal(2));
+console.log(Product.isValidPrice(-100));
+console.log(sale instanceof Product);
+console.log(Object.hasOwn(sale, "getTotal"));
