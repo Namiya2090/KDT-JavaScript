@@ -1,0 +1,4 @@
+.submit-profile-form :focus-visible {
+  outline: 3px solid #91b4e6;
+  outline-offset: 3px;
+}
