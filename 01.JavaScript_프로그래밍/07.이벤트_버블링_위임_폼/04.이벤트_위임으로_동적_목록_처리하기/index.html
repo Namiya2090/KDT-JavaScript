@@ -1,0 +1,29 @@
+<!doctype html>
+<html lang="ko">
+  <head>
+    <meta charset="UTF-8" />
+    <title>DOM 실습</title>
+    <script src="main.js" defer></script>
+  </head>
+  <body>
+    <section class="delegate-demo">
+      <h2>복습 목록</h2>
+      <ul class="delegate-list">
+        <li class="delegate-item" data-id="item-1">
+          <button type="button" data-action="select">
+            <span>HTML 복습</span>
+          </button>
+        </li>
+        <li class="delegate-item" data-id="item-2">
+          <button type="button" data-action="select">
+            <span>JavaScript 복습</span>
+          </button>
+        </li>
+      </ul>
+      <button class="delegate-add" type="button">항목 추가</button>
+      <p class="delegate-result" aria-live="polite">
+        아직 선택하지 않았습니다.
+      </p>
+    </section>
+  </body>
+</html>
