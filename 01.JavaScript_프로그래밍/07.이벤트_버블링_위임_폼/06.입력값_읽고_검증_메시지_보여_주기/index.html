@@ -1,0 +1,27 @@
+<!doctype html>
+<html lang="ko">
+  <head>
+    <meta charset="UTF-8" />
+    <title>DOM 실습</title>
+    <script src="main.js" defer></script>
+  </head>
+  <body>
+    <section class="submit-demo">
+      <h2>프로필 저장</h2>
+      <form class="submit-profile-form" novalidate>
+        <label for="submit-nickname">별명</label>
+        <input
+          id="submit-nickname"
+          name="nickname"
+          type="text"
+          aria-describedby="submit-nickname-message"
+        />
+        <p id="submit-nickname-message" aria-live="polite">
+          앞뒤 공백을 제외하고 두 글자 이상 입력해 주세요.
+        </p>
+        <button type="submit">저장</button>
+      </form>
+      <p class="submit-result" aria-live="polite">아직 제출하지 않았습니다.</p>
+    </section>
+  </body>
+</html>
