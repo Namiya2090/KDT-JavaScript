@@ -1,0 +1,293 @@
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  padding: clamp(32px, 8vw, 80px) 20px;
+  background: #141414;
+
+  font-family: system-ui, sans-serif;
+  line-height: 1.5;
+  color: #ffffff;
+
+  color-scheme: dark;
+}
+
+/* 입력 요소와 버튼 요소 */
+input,
+button {
+  border-radius: 6px;
+  font: inherit;
+}
+
+/* 입력 요소 */
+input {
+  flex: 1;
+
+  min-width: 0;
+  padding: 11px 12px;
+  border: 1px solid #777777;
+  background: #141414;
+
+  color: inherit;
+}
+
+input::placeholder {
+  color: #ababab;
+}
+
+/* 버튼 요소 */
+button {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+
+button svg {
+  flex-shrink: 0;
+}
+
+/* ------------------------------ */
+
+/* 메인 영역 */
+.main {
+  max-width: 600px;
+  padding: clamp(20px, 6vw, 44px);
+  border: 1px solid #393939;
+  border-radius: 14px;
+  margin: 0 auto;
+  background: #202020;
+}
+
+/* ------------------------------ */
+
+/* Todo 타이틀 */
+h1 {
+  margin: 0 0 30px;
+
+  font-size: clamp(28px, 5vw, 40px);
+  letter-spacing: -0.01em;
+}
+
+/* 그라디언트 색상 */
+@supports (background-clip: text) {
+  h1 {
+    width: fit-content;
+    background-image: linear-gradient(105deg, #979dac, #7d8597 42%, #0466c8);
+    background-clip: text;
+
+    color: transparent;
+  }
+}
+
+/* 고대비 환경 대비 */
+@media (forced-colors: active) {
+  h1 {
+    color: CanvasText;
+  }
+}
+
+/* ------------------------------ */
+
+/* 할 일 항목 추가 영역 */
+.todo_form {
+  display: flex;
+  gap: 8px;
+  margin: 0;
+}
+
+/* ------------------------------ */
+
+/* 할 일 항목 입력 영역 */
+.input_box {
+  flex: 1;
+  min-width: 0;
+}
+
+.input_box-heading {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+
+  margin-bottom: 8px;
+}
+
+label {
+  display: block;
+  font-size: 14px;
+  font-weight: 650;
+}
+
+.input_limit {
+  font-size: 12px;
+  color: #979dac;
+}
+
+.todo_input {
+  width: 100%;
+}
+
+.todo_input:focus-visible {
+  outline: 3px solid rgb(4 102 200 / 85%);
+  outline-offset: 2px;
+}
+
+/* ------------------------------ */
+
+/* 할 일 항목 추가 버튼 */
+.add_button {
+  align-self: flex-end;
+  flex-shrink: 0;
+
+  padding: 10px 12px;
+  border: 1px solid #0466c8;
+  background: #0466c8;
+
+  font-weight: 650;
+  color: #ffffff;
+
+  cursor: pointer;
+}
+
+@media (hover: hover) {
+  .todo__add:hover {
+    border-color: #0353a4;
+    background: #0353a4;
+  }
+}
+
+/* ------------------------------ */
+
+/* 할 일 항목 추가 영역, 할 일 항목 추가 버튼 */
+@media (max-width: 400px) {
+  .todo__controls {
+    flex-direction: column;
+  }
+
+  .todo__add {
+    align-self: flex-end;
+  }
+}
+
+/* ------------------------------ */
+
+/* 할 일 목록 타이틀 */
+h2 {
+  margin: 34px 0 8px;
+  font-size: 16px;
+}
+
+/* 할 일 항목 카운트 텍스트 */
+.count {
+  font-size: 0.7rem;
+  color: #979dac;
+}
+
+/* ------------------------------ */
+
+/* 할 일 목록 */
+.todo__list {
+  max-height: min(38vh, 300px);
+  padding: 0;
+  padding-inline-end: 8px;
+  margin: 0;
+
+  overflow-x: hidden;
+  overflow-y: auto;
+
+  list-style: none;
+
+  scrollbar-gutter: stable;
+  scrollbar-width: thin;
+  scrollbar-color: #7d8597 #202020;
+}
+
+/* ------------------------------ */
+
+/* 할 일 항목 */
+.todo_item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 4px;
+
+  min-height: 58px;
+  padding: 8px 0;
+  border-top: 1px solid #393939;
+}
+
+.todo_item:last-child {
+  border-bottom: 1px solid #393939;
+}
+
+/* 할 일 항목의 텍스트 */
+.todo_text {
+  flex: 1;
+  min-width: 0;
+  margin-inline-end: 8px;
+  overflow-wrap: anywhere;
+}
+
+/* 완료한 항목의 텍스트 */
+.todo_item-completed .todo_text {
+  color: #ababab;
+  text-decoration: line-through;
+}
+
+/* ------------------------------ */
+
+/* 완료 버튼, 삭제 버튼 */
+.todo_completed,
+.todo_delete {
+  flex-shrink: 0;
+
+  padding: 5px 10px;
+  background: transparent;
+
+  font-size: 14px;
+  color: #979dac;
+
+  transition: color 180ms ease;
+  cursor: pointer;
+}
+
+.todo_completed:focus-visible,
+.todo_delete:focus-visible {
+  outline-offset: -3px;
+}
+
+/* 완료 버튼 */
+.todo_completed {
+  border: 1px dashed #979dac;
+}
+
+/* 완료한 버튼 */
+.todo_item-completed .todo_completed {
+  border: 1px solid transparent;
+  background-color: #0466c8;
+
+  color: #ffffff;
+}
+
+/* 삭제 버튼 */
+.todo_delete {
+  border: 1px solid transparent;
+}
+
+@media (hover: hover) {
+  .todo_delete:hover {
+    border: 1px solid transparent;
+    background-color: #0466c8;
+
+    color: #ffffff;
+  }
+}
+
+/* 애니메이션 줄이기 사용 시 트랜지션 제거 */
+@media (prefers-reduced-motion: reduce) {
+  .todo_delete {
+    transition: none;
+  }
+}

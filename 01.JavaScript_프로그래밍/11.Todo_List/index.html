@@ -1,0 +1,66 @@
+<!doctype html>
+<html lang="ko">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>오늘의 Todo List</title>
+    <link rel="stylesheet" href="style.css" />
+    <script src="main.js" defer></script>
+  </head>
+  <body>
+    <!-- 메인 영역 -->
+    <main class="main">
+      <!-- Todo 타이틀 -->
+      <h1>오늘의 Todo List</h1>
+
+      <!-- 할 일 항목 추가 영역 -->
+      <form id="todo-form" class="todo_form">
+        <!-- 할 일 항목 입력 영역 -->
+        <div class="input_box">
+          <div class="input_box-heading">
+            <label for="todo-input">Todo</label>
+            <small id="input-limit" class="input_limit">0/50자</small>
+          </div>
+          <input
+            id="todo-input"
+            class="todo_input"
+            type="text"
+            maxlength="50"
+            aria-describedby="input-limit"
+            placeholder="오늘의 할일을 적어주세요"
+          />
+        </div>
+
+        <!-- 할 일 항목 추가 버튼 -->
+        <button class="add_button" type="submit">
+          <svg
+            width="16"
+            height="16"
+            viewBox="0 0 16 16"
+            fill="currentColor"
+            aria-hidden="true"
+          >
+            <path
+              fill-rule="evenodd"
+              d="M8 2a.5.5 0 0 1 .5.5v5h5a.5.5 0 0 1 0 1h-5v5a.5.5 0 0 1-1 0v-5h-5a.5.5 0 0 1 0-1h5v-5A.5.5 0 0 1 8 2"
+            />
+          </svg>
+          추가하기
+        </button>
+      </form>
+
+      <!-- 할 일 목록 타이틀 -->
+      <h2 id="list-title">내 목록</h2>
+      <div>
+        <span id="total-count" class="count"></span>
+        <span id="completed-count" class="count"></span>
+      </div>
+      <ul
+        id="todo-list"
+        class="todo_list"
+        aria-labelledby="list-title"
+        tabindex="0"
+      ></ul>
+    </main>
+  </body>
+</html>
