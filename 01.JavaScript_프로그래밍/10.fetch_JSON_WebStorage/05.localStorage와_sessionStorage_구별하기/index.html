@@ -1,0 +1,25 @@
+<!doctype html>
+<html lang="ko">
+  <head>
+    <meta charset="UTF-8" />
+    <title>스토리지 비교 실습</title>
+    <link rel="stylesheet" href="./style.css" />
+    <script src="./main.js" defer></script>
+  </head>
+  <body>
+    <main class="box">
+      <h1>localStorage vs sessionStorage</h1>
+      <input id="memoInput" type="text" placeholder="메모를 입력하세요" />
+      <button id="saveBtn" type="button">저장</button>
+      <button id="clearBtn" type="button">초기화</button>
+      <p>
+        <strong>localStorage (브라우저 유지):</strong>
+        <span id="localOut">-</span>
+      </p>
+      <p>
+        <strong>sessionStorage (현재 탭 유지):</strong>
+        <span id="sessionOut">-</span>
+      </p>
+    </main>
+  </body>
+</html>
