@@ -9,15 +9,13 @@ const SVG_NS = "http://www.w3.org/2000/svg";
 
 /* ------------------------------ */
 
-// 랜더 함수 추가 후 교안 보고 확장
-
 // 입력 수 제한 업데이트 함수
 function updateInputLimit() {
   inputLimit.textContent = `${todoInput.value.length}/${todoInput.maxLength}자`;
 }
 
 // 할 일 항목 카운트 업데이트 함수
-function updateItemCount() {
+function updateTodoItemCount() {
   // 로컬 저장소에서 할 일 배열 불러오기
   const todoArray = JSON.parse(localStorage.getItem(STORAGE_KEY)) || [];
 
@@ -32,53 +30,18 @@ function updateItemCount() {
   }
 }
 
-// 입력값 유효성 검사 함수
-function validateValue(inputValue) {
-  // 문자열이 아닌 값이 들어와도 안전하게 공백 정리
-  const text = typeof inputValue === "string" ? inputValue.trim() : "";
-
-  // 입력값이 없으면
-  if (!text.length) {
-    // 안내문을 띄우기
-    window.alert("내용을 입력해주세요.");
-
-    // 입력창을 비우기, 포커싱, 입력 수 제한 업데이트
-    todoInput.value = "";
-    todoInput.focus();
-    updateInputLimit();
-
-    return false;
-  }
-
-  return true;
-}
-
-// 할 일 항목 추가 함수
-function addTodoItem() {
-  // 입력값 검사
-  if (!validateValue(todoInput.value)) return;
-
-  // 로컬 저장소에서 할 일 배열 불러오기
-  const todoArray = JSON.parse(localStorage.getItem(STORAGE_KEY)) || [];
-
-  // todo 객체 생성 후 로컬 저장소에 저장
-  const todo = {
-    id: Date.now(),
-    text: todoInput.value.trim(),
-    complete: false,
-  };
-  todoArray.push(todo);
-  localStorage.setItem(STORAGE_KEY, JSON.stringify(todoArray));
-
+// 할 일 항목 생성 함수
+function createTodoItem(item) {
   // 할 일 항목 생성
   const todoItem = document.createElement("li");
   todoItem.classList.add("todo_item");
-  todoItem.setAttribute("data-id", todo.id);
+  if (item.complete) todoItem.classList.add("todo_item-completed");
+  todoItem.setAttribute("data-id", item.id);
 
   // 할 일 항목 텍스트 생성
-  const todoItemText = document.createElement("span");
-  todoItemText.classList.add("todo_text");
-  todoItemText.textContent = `${todo.text}`;
+  const itemText = document.createElement("span");
+  itemText.classList.add("todo_text");
+  itemText.textContent = `${item.text}`;
 
   // 할 일 항목 완료 버튼 생성
   const completeBtn = document.createElement("button");
@@ -127,37 +90,121 @@ function addTodoItem() {
   deleteBtn.append(deleteSvg, "삭제");
 
   // 할 일 항목에 만든 요소들 추가
-  todoItem.append(todoItemText, completeBtn, deleteBtn);
+  todoItem.append(itemText, completeBtn, deleteBtn);
 
-  // 할 일 목록에 항목을 추가
-  todoList.append(todoItem);
+  // 만들어진 할 일 항목 반환
+  return todoItem;
+}
 
-  // 후처리
-  updateItemCount();
-  todoInput.value = "";
-  todoInput.focus();
-  updateInputLimit();
+// 입력값 유효성 검사 함수
+function validateValue(inputValue) {
+  try {
+    // 문자열이 아닌 값이 들어와도 안전하게 공백 정리
+    const text = typeof inputValue === "string" ? inputValue.trim() : "";
+
+    // 입력 값이 없으면 오류를 던짐
+    if (!text.length) throw new Error("내용을 입력해주세요.");
+
+    return true;
+  } catch (error) {
+    // 안내문을 띄우기
+    window.alert(error.message);
+
+    // 입력창을 비우기, 포커싱, 입력 수 제한 업데이트
+    todoInput.value = "";
+    todoInput.focus();
+    updateInputLimit();
+
+    return false;
+  }
 }
 
 /* ------------------------------ */
 
-// 페이지 로드 시 필요한 함수들
-updateItemCount();
+// 렌더 함수
+function render() {
+  // 로컬 저장소에서 할 일 배열 불러오기
+  const todoArray = JSON.parse(localStorage.getItem(STORAGE_KEY)) || [];
+
+  // 할 일 항목 배열 생성
+  const todoItemArray = todoArray.map((item) => createTodoItem(item));
+
+  // 할 일 목록에 항목을 추가
+  todoList.replaceChildren(...todoItemArray);
+
+  // 할 일 항목 카운트 업데이트
+  updateTodoItemCount();
+}
+
+// 할 일 항목 추가 함수
+function addTodoItem() {
+  // 입력값 검사
+  if (!validateValue(todoInput.value)) return;
+
+  // 로컬 저장소에서 할 일 배열 불러오기
+  const todoArray = JSON.parse(localStorage.getItem(STORAGE_KEY)) || [];
+
+  // todo 객체 생성 후 로컬 저장소에 저장
+  const todo = {
+    id: Date.now(),
+    text: todoInput.value.trim(),
+    complete: false,
+  };
+  todoArray.push(todo);
+  localStorage.setItem(STORAGE_KEY, JSON.stringify(todoArray));
+
+  // 후처리
+  render();
+  todoInput.value = "";
+  updateInputLimit();
+}
+
+// 할 일 항목 삭제 함수
+function deleteTodoItem(targetId) {
+  // 로컬 저장소에서 할 일 배열 불러오기
+  let todoArray = JSON.parse(localStorage.getItem(STORAGE_KEY)) || [];
+
+  // 할 일 배열 항목 중 id 속성 값이 targetId와 일치하면 삭제
+  todoArray = todoArray.filter((todo) => Number(todo.id) !== targetId);
+  localStorage.setItem(STORAGE_KEY, JSON.stringify(todoArray));
+
+  // 후처리
+  render();
+}
+
+// 할 일 항목 완료 함수
+function completedTodoItem(targetId) {
+  // 로컬 저장소에서 할 일 배열 불러오기
+  const todoArray = JSON.parse(localStorage.getItem(STORAGE_KEY)) || [];
+
+  // 할 일 배열 항목 중 id 속성 값이 targetId와 일치한 항목을 찾기 없으면 종료
+  const targetTodo = todoArray.find((todo) => Number(todo.id) === targetId);
+  if (!targetTodo) return;
+
+  // 찾은 항목의 complete 속성 값을 갱신(false → true or true → false)
+  targetTodo.complete = !targetTodo.complete;
+  localStorage.setItem(STORAGE_KEY, JSON.stringify(todoArray));
+
+  // 후처리
+  render();
+}
+
+/* ------------------------------ */
+
+// 페이지 로드 시 렌더링
+render();
+updateInputLimit();
 
 /* ------------------------------ */
 
 // 입력창에 입력 시 입력 수 제한 업데이트
 todoInput.addEventListener("input", updateInputLimit);
 
-/* ------------------------------ */
-
 // 할 일 항목 추가
 todoForm.addEventListener("submit", function (event) {
   event.preventDefault();
   addTodoItem();
 });
-
-/* ------------------------------ */
 
 // 할 일 목록을 클릭하면(버튼의 이벤트 위임)
 todoList.addEventListener("click", function (event) {
@@ -172,9 +219,6 @@ todoList.addEventListener("click", function (event) {
   const todoItem = actionButton.closest(".todo_item");
   if (!todoItem) return;
 
-  // 로컬 저장소에서 할 일 배열 불러오기
-  let todoArray = JSON.parse(localStorage.getItem(STORAGE_KEY)) || [];
-
   // 찾은 항목의 data-id 속성 값
   const targetId = Number(todoItem.dataset.id);
 
@@ -182,29 +226,7 @@ todoList.addEventListener("click", function (event) {
   const action = actionButton.dataset.action;
 
   // 완료 버튼을 눌렀다면
-  if (action === "toggle") {
-    // 할 일 배열 항목 중 id 속성 값이 targetId와 일치한 항목을 찾기
-    const targetTodo = todoArray.find((todo) => Number(todo.id) === targetId);
-    if (!targetTodo) return;
-
-    // 찾은 항목의 complete 속성 값을 갱신(false → true or true → false)
-    targetTodo.complete = !targetTodo.complete;
-    localStorage.setItem(STORAGE_KEY, JSON.stringify(todoArray));
-
-    // 갱신한 complete 속성 값을 기준으로 완료 항목에 todo__item--complete 클래스를 토글
-    todoItem.classList.toggle("todo_item-completed", targetTodo.complete);
-
-    // 할 일 항목 개수 업데이트
-    updateItemCount();
-  }
+  if (action === "toggle") completedTodoItem(targetId);
   // 삭제 버튼을 눌렀다면
-  else if (action === "delete") {
-    // 할 일 배열 항목 중 id 속성 값이 targetId와 일치하면 삭제
-    todoArray = todoArray.filter((todo) => Number(todo.id) !== targetId);
-    localStorage.setItem(STORAGE_KEY, JSON.stringify(todoArray));
-    todoItem.remove();
-
-    // 할 일 항목 개수 업데이트
-    updateItemCount();
-  }
+  else if (action === "delete") deleteTodoItem(targetId);
 });
